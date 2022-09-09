@@ -8,46 +8,44 @@ import (
 )
 
 type workspace struct {
-	// The wd directory of the workspace.
-	wd string
-	// The directory containing the Go packages.
-	pkg string
-	// The directory containing the Go source files.
-	cmd string
-	// The directory containing the main.go file.
-	main string
-	// Location of main.go file.
-	mainFile string
+	workingDir   string
+	packageDir   string
+	commandDir   string
+	mainDir      string
+	binariesDir  string
+	mainFilePath string
 }
 
 func (w *workspace) construct() {
-	if w.wd == "" {
+	if w.workingDir == "" {
 		wd, err := os.Getwd()
 		if err != nil {
 			log.Fatal(err)
 		}
-		w.wd = wd + "/unnamed-project"
+		w.workingDir = wd + "/unnamed-project"
 	}
-	w.cmd = w.wd + "/cmd/"
-	w.pkg = w.wd + "/pkg/"
-	if w.main == "" {
-		w.main = w.cmd + "main/"
+	w.binariesDir = w.workingDir + "/bin/"
+	w.commandDir = w.workingDir + "/cmd/"
+	w.packageDir = w.workingDir + "/pkg/"
+	if w.mainDir == "" {
+		w.mainDir = w.commandDir + "main/"
 	}
 }
 
-func (w *workspace) mainFilePath() {
-	w.mainFile = w.main + "main.go"
+func (w *workspace) setMainFilePath() {
+	w.mainFilePath = w.mainDir + "main.go"
 }
 
 func (w *workspace) createWorkspace() {
-	os.MkdirAll(w.pkg, os.ModePerm)
-	os.MkdirAll(w.cmd, os.ModePerm)
-	os.MkdirAll(w.main, os.ModePerm)
-	log.Printf("Created workspace at %s", w.wd)
+	os.MkdirAll(w.packageDir, os.ModePerm)
+	os.MkdirAll(w.commandDir, os.ModePerm)
+	os.MkdirAll(w.binariesDir, os.ModePerm)
+	os.MkdirAll(w.mainDir, os.ModePerm)
+	log.Printf("Created workspace at %s", w.workingDir)
 }
 
 func (w *workspace) createMainFile() {
-	mainFile, err := os.Create(w.mainFile)
+	mainFile, err := os.Create(w.mainFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +54,7 @@ func (w *workspace) createMainFile() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Created main.go file at %s", w.mainFile)
+	log.Printf("Created main.go file at %s", w.mainFilePath)
 }
 
 func reminder() {
@@ -70,16 +68,16 @@ func main() {
 		Action: func(cCtx *cli.Context) error {
 			w := workspace{}
 			if cCtx.Args().Len() > 0 {
-				w.wd = "./" + cCtx.Args().Get(0)
+				w.workingDir = "./" + cCtx.Args().Get(0)
 			}
 			w.construct()
 			if cCtx.Args().Len() == 2 {
-				w.main = w.cmd + cCtx.Args().Get(1) + "/"
+				w.mainDir = w.commandDir + cCtx.Args().Get(1) + "/"
 			}
-			w.mainFilePath()
+			w.setMainFilePath()
 			w.createWorkspace()
 			w.createMainFile()
-
+			reminder()
 			return nil
 		},
 	}
