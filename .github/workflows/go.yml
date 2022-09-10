@@ -19,8 +19,8 @@ jobs:
         go-version: 1.18
 
     - name: Test
-      run: go test -v ./../cmd/gow/.
+      run: go test -v ./cmd/gow
 
     - name: Build
-      run: go build -v ./../cmd/gow/.
+      run: go build -v -o bin/gow ./cmd/gow
 
