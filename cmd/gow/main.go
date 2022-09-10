@@ -8,21 +8,23 @@ import (
 )
 
 func main() {
+	w := workspace{}
+	var projectName string
+	var appName string
 	app := &cli.App{
 		Name:  "gow",
 		Usage: "gow [projectName]",
 		Action: func(cCtx *cli.Context) error {
-			w := workspace{}
 			if cCtx.Args().Len() == 1 {
-				p1 := cCtx.Args().Get(0)
-				w.construct(p1, "")
+				projectName = cCtx.Args().Get(0)
+				w.construct(projectName, "")
+			} else if cCtx.Args().Len() == 2 {
+				projectName = cCtx.Args().Get(0)
+				appName = cCtx.Args().Get(1)
+				w.construct(projectName, appName)
+			} else {
+				w.construct(projectName, appName)
 			}
-			if cCtx.Args().Len() == 2 {
-				p1 := cCtx.Args().Get(0)
-				p2 := cCtx.Args().Get(1)
-				w.construct(p1, p2)
-			}
-			// fmt.Printf("%#v\n", w)
 			w.create()
 			return nil
 		},
