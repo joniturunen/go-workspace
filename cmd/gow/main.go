@@ -7,27 +7,25 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func reminder() {
-	log.Println("Remember to run go mod init [projectName] in the workspace directory")
-}
-
 func main() {
+	w := workspace{}
+	var projectName string
+	var appName string
 	app := &cli.App{
 		Name:  "gow",
 		Usage: "gow [projectName]",
 		Action: func(cCtx *cli.Context) error {
-			w := workspace{}
-			if cCtx.Args().Len() > 0 {
-				w.workingDir = "./" + cCtx.Args().Get(0)
+			if cCtx.Args().Len() == 1 {
+				projectName = cCtx.Args().Get(0)
+				w.construct(projectName, "")
+			} else if cCtx.Args().Len() == 2 {
+				projectName = cCtx.Args().Get(0)
+				appName = cCtx.Args().Get(1)
+				w.construct(projectName, appName)
+			} else {
+				w.construct(projectName, appName)
 			}
-			w.construct()
-			if cCtx.Args().Len() == 2 {
-				w.mainDir = w.commandDir + cCtx.Args().Get(1) + "/"
-			}
-			w.setMainFilePath()
-			w.createWorkspace()
-			w.createMainFile()
-			reminder()
+			w.create()
 			return nil
 		},
 	}
