@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
@@ -40,7 +41,6 @@ func (w *workspace) createWorkspace() {
 	os.MkdirAll(w.commandDir, os.ModePerm)
 	os.MkdirAll(w.binariesDir, os.ModePerm)
 	os.MkdirAll(w.mainDir, os.ModePerm)
-	log.Printf("Created workspace at %s", w.workingDir)
 }
 
 func (w *workspace) createMainFile() {
@@ -53,5 +53,14 @@ func (w *workspace) createMainFile() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Created main.go file at %s", w.mainFilePath)
+}
+
+func (w *workspace) create() {
+	w.createWorkspace()
+	w.createMainFile()
+	w.reminder()
+}
+
+func (w *workspace) reminder() {
+	fmt.Printf("Remember to run go mod init [projectName] in the workspace directory:\n%v", w.workingDir)
 }

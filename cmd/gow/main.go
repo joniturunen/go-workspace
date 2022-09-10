@@ -7,10 +7,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func reminder() {
-	log.Println("Remember to run go mod init [projectName] in the workspace directory")
-}
-
 func main() {
 	app := &cli.App{
 		Name:  "gow",
@@ -27,9 +23,7 @@ func main() {
 				w.construct(p1, p2)
 			}
 			// fmt.Printf("%#v\n", w)
-			w.createWorkspace()
-			w.createMainFile()
-			reminder()
+			w.create()
 			return nil
 		},
 	}
