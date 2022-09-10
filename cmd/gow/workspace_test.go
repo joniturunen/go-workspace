@@ -20,7 +20,7 @@ func Test_workspace_struct_is_expected(t *testing.T) {
 		w.construct(param1, param2)
 
 		got := w
-		expected := workspace{workingDir: expectWd, packageDir: expectWd + "/pkg/", commandDir: expectWd + "/cmd/", mainDir: expectWd + "/cmd/main/", binariesDir: expectWd + "/bin/", mainFilePath: w.mainDir + "main.go"}
+		expected := workspace{workingDir: expectWd, packageDir: expectWd + "/pkg/", commandDir: expectWd + "/cmd/", mainDir: expectWd + "/cmd/main/", binariesDir: expectWd + "/bin/", mainFilePath: w.mainDir + "main.go", mainTestFilePath: w.mainDir + "main_test.go"}
 
 		if got != expected {
 			t.Errorf("GOT: %#q\nEXPECTED: %#q\n", got, expected)
@@ -32,7 +32,7 @@ func Test_workspace_struct_is_expected(t *testing.T) {
 		var param2 string
 		w.construct(param1, param2)
 		got := w
-		expected := workspace{workingDir: "./test-project", packageDir: "./test-project/pkg/", commandDir: "./test-project/cmd/", mainDir: "./test-project/cmd/main/", binariesDir: "./test-project/bin/", mainFilePath: "./test-project/cmd/main/main.go"}
+		expected := workspace{workingDir: "./test-project", packageDir: "./test-project/pkg/", commandDir: "./test-project/cmd/", mainDir: "./test-project/cmd/main/", binariesDir: "./test-project/bin/", mainFilePath: "./test-project/cmd/main/main.go", mainTestFilePath: "./test-project/cmd/main/main_test.go"}
 
 		if got != expected {
 			t.Errorf("GOT: %q\nEXPECTED: %q\n", got, expected)
@@ -46,7 +46,7 @@ func Test_workspace_struct_is_expected(t *testing.T) {
 
 		got := w
 		// Assert that the constructed workspace has the expected working dir
-		expected := workspace{workingDir: "./projectFoo", packageDir: "./projectFoo/pkg/", commandDir: "./projectFoo/cmd/", mainDir: "./projectFoo/cmd/appBar/", binariesDir: "./projectFoo/bin/", mainFilePath: "./projectFoo/cmd/appBar/main.go"}
+		expected := workspace{workingDir: "./projectFoo", packageDir: "./projectFoo/pkg/", commandDir: "./projectFoo/cmd/", mainDir: "./projectFoo/cmd/appBar/", binariesDir: "./projectFoo/bin/", mainFilePath: "./projectFoo/cmd/appBar/main.go", mainTestFilePath: "./projectFoo/cmd/appBar/main_test.go"}
 
 		if got != expected {
 			t.Errorf("GOT: %q\nEXPECTED: %q\n", got, expected)
