@@ -80,5 +80,5 @@ func (w *workspace) create() {
 }
 
 func (w *workspace) reminder() {
-	fmt.Println("✌\tRemember to run go mod init [projectName] in the workspace directory.")
+	fmt.Println("✌\tRemember to run `go mod init [projectName]` in the workspace directory.")
 }
