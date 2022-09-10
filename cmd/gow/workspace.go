@@ -7,12 +7,13 @@ import (
 )
 
 type workspace struct {
-	workingDir   string
-	packageDir   string
-	commandDir   string
-	mainDir      string
-	binariesDir  string
-	mainFilePath string
+	workingDir       string
+	packageDir       string
+	commandDir       string
+	mainDir          string
+	binariesDir      string
+	mainFilePath     string
+	mainTestFilePath string
 }
 
 func (w *workspace) construct(projectName string, appName string) {
@@ -34,16 +35,23 @@ func (w *workspace) construct(projectName string, appName string) {
 		w.mainDir = w.commandDir + appName + "/"
 	}
 	w.mainFilePath = w.mainDir + "main.go"
+	w.mainTestFilePath = w.mainDir + "main_test.go"
 }
 
 func (w *workspace) createWorkspace() {
-	os.MkdirAll(w.packageDir, os.ModePerm)
-	os.MkdirAll(w.commandDir, os.ModePerm)
-	os.MkdirAll(w.binariesDir, os.ModePerm)
-	os.MkdirAll(w.mainDir, os.ModePerm)
+	// Check if the workspace already exists
+	if _, err := os.Stat(w.workingDir); os.IsNotExist(err) {
+		os.MkdirAll(w.packageDir, os.ModePerm)
+		os.MkdirAll(w.commandDir, os.ModePerm)
+		os.MkdirAll(w.binariesDir, os.ModePerm)
+		os.MkdirAll(w.mainDir, os.ModePerm)
+	} else {
+		log.Fatalf("Workspace %v already exists", w.workingDir)
+	}
 }
 
-func (w *workspace) createMainFile() {
+func (w *workspace) createFiles() {
+	// For main.go
 	mainFile, err := os.Create(w.mainFilePath)
 	if err != nil {
 		log.Fatal(err)
@@ -53,14 +61,24 @@ func (w *workspace) createMainFile() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// For main_test.go
+	mainTestFile, err := os.Create(w.mainTestFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer mainTestFile.Close()
+	_, err = mainTestFile.WriteString(mainTestFileContents)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (w *workspace) create() {
 	w.createWorkspace()
-	w.createMainFile()
+	w.createFiles()
 	w.reminder()
 }
 
 func (w *workspace) reminder() {
-	fmt.Printf("Remember to run go mod init [projectName] in the workspace directory:\n%v", w.workingDir)
+	fmt.Println("✌\tRemember to run go mod init [projectName] in the workspace directory.")
 }
