@@ -17,14 +17,16 @@ func main() {
 		Usage: "gow [projectName]",
 		Action: func(cCtx *cli.Context) error {
 			w := workspace{}
-			if cCtx.Args().Len() > 0 {
-				w.workingDir = "./" + cCtx.Args().Get(0)
+			if cCtx.Args().Len() == 1 {
+				p1 := cCtx.Args().Get(0)
+				w.construct(p1, "")
 			}
-			w.construct()
 			if cCtx.Args().Len() == 2 {
-				w.mainDir = w.commandDir + cCtx.Args().Get(1) + "/"
+				p1 := cCtx.Args().Get(0)
+				p2 := cCtx.Args().Get(1)
+				w.construct(p1, p2)
 			}
-			w.setMainFilePath()
+			// fmt.Printf("%#v\n", w)
 			w.createWorkspace()
 			w.createMainFile()
 			reminder()

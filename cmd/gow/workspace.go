@@ -14,23 +14,24 @@ type workspace struct {
 	mainFilePath string
 }
 
-func (w *workspace) construct() {
-	if w.workingDir == "" {
+func (w *workspace) construct(projectName string, appName string) {
+	if projectName == "" {
 		wd, err := os.Getwd()
 		if err != nil {
 			log.Fatal(err)
 		}
-		w.workingDir = wd + "/unnamed-project"
+		w.workingDir = wd + unnamedProjectName
+	} else {
+		w.workingDir = "./" + projectName
 	}
-	w.binariesDir = w.workingDir + "/bin/"
-	w.commandDir = w.workingDir + "/cmd/"
-	w.packageDir = w.workingDir + "/pkg/"
-	if w.mainDir == "" {
-		w.mainDir = w.commandDir + "main/"
+	w.binariesDir = w.workingDir + binDir
+	w.commandDir = w.workingDir + cmdDir
+	w.packageDir = w.workingDir + pkgDir
+	if appName == "" {
+		w.mainDir = w.commandDir + mainDirPostfix
+	} else {
+		w.mainDir = w.commandDir + appName + "/"
 	}
-}
-
-func (w *workspace) setMainFilePath() {
 	w.mainFilePath = w.mainDir + "main.go"
 }
 
